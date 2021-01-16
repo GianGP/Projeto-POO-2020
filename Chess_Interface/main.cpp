@@ -41,7 +41,44 @@ int main(){
     sf::RectangleShape grid[rows][columns];
 	sf::Vector2f cellSize(100, 100);
     
-    // Carrega os arquivos dos sprites
+    // Fonte para indicar as posições
+    
+	sf::Font font;
+	
+	if(!font.loadFromFile("fonte/RobotoBold.ttf")){
+		std::cout << "Hello World!" << std::endl;
+		system("pause");
+	}
+	
+	sf::Text text[4];
+	
+	text[0].setFont(font);
+	text[0].setString("8												6												4												2");
+	text[0].setPosition(17, 5);
+	text[0].setRotation(90);
+	text[0].setFillColor(sf::Color(119,147,85));
+	text[0].setCharacterSize(15);
+
+	text[1].setFont(font);
+	text[1].setString("7												5												3												1");
+	text[1].setPosition(17, 105);
+	text[1].setRotation(90);
+	text[1].setFillColor(sf::Color(235,235,208));
+	text[1].setCharacterSize(15);
+	
+	text[2].setFont(font);
+	text[2].setString("a											   c											     e											   g");
+	text[2].setPosition(88, 780);
+	text[2].setFillColor(sf::Color(235,235,208));
+	text[2].setCharacterSize(15);
+	
+	text[3].setFont(font);
+	text[3].setString("b											   d											     f											   h");
+	text[3].setPosition(190, 780);
+	text[3].setFillColor(sf::Color(119,147,85));
+	text[3].setCharacterSize(15);   
+    
+	// Carrega os arquivos dos sprites
 	sf::Texture texture[12];
 	sf::Sprite sprite[12];
 	
@@ -125,6 +162,10 @@ int main(){
 				}
         	}
     	}
+		window.draw(text[0]);
+		window.draw(text[1]);
+		window.draw(text[2]);
+		window.draw(text[3]);
 		
 		// Exibe tudo realizado pelo comando window.draw na tela
         window.display();

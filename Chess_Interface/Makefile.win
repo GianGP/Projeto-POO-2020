@@ -4,11 +4,11 @@
 CPP      = g++.exe -D__DEBUG__
 CC       = gcc.exe -D__DEBUG__
 WINDRES  = windres.exe
-OBJ      = main.o ../classes/Interface.o ../classes/Piece.o ../classes/Pawn.o
-LINKOBJ  = main.o ../classes/Interface.o ../classes/Piece.o ../classes/Pawn.o
-LIBS     = -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib" -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib" -static-libgcc -L"C:/SFML-2.4.2/lib" -mwindows -lsfml-audio -lsfml-graphics -lsfml-window -lsfml-system -g3
-INCS     = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include"
-CXXINCS  = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include/c++"
+OBJ      = main.o ../classes/Interface.o ../classes/Piece.o ../classes/Pawn.o ../classes/King.o ../classes/Knight.o ../classes/Bishop.o ../classes/Queen.o ../classes/Rook.o
+LINKOBJ  = main.o ../classes/Interface.o ../classes/Piece.o ../classes/Pawn.o ../classes/King.o ../classes/Knight.o ../classes/Bishop.o ../classes/Queen.o ../classes/Rook.o
+LIBS     = -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib" -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib" -static-libgcc -O0 -L"C:/SFML-2.4.2/lib" -mwindows -lsfml-audio -lsfml-graphics -lsfml-window -lsfml-system -g3
+INCS     = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"C:/SFML-2.4.2/include"
+CXXINCS  = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include/c++" -I"C:/SFML-2.4.2/include"
 BIN      = POO_Xadrez.exe
 CXXFLAGS = $(CXXINCS) -g3
 CFLAGS   = $(INCS) -g3
@@ -35,3 +35,18 @@ main.o: main.cpp
 
 ../classes/Pawn.o: ../classes/Pawn.cpp
 	$(CPP) -c ../classes/Pawn.cpp -o ../classes/Pawn.o $(CXXFLAGS)
+
+../classes/King.o: ../classes/King.cpp
+	$(CPP) -c ../classes/King.cpp -o ../classes/King.o $(CXXFLAGS)
+
+../classes/Knight.o: ../classes/Knight.cpp
+	$(CPP) -c ../classes/Knight.cpp -o ../classes/Knight.o $(CXXFLAGS)
+
+../classes/Bishop.o: ../classes/Bishop.cpp
+	$(CPP) -c ../classes/Bishop.cpp -o ../classes/Bishop.o $(CXXFLAGS)
+
+../classes/Queen.o: ../classes/Queen.cpp
+	$(CPP) -c ../classes/Queen.cpp -o ../classes/Queen.o $(CXXFLAGS)
+
+../classes/Rook.o: ../classes/Rook.cpp
+	$(CPP) -c ../classes/Rook.cpp -o ../classes/Rook.o $(CXXFLAGS)
