@@ -4,8 +4,8 @@
 CPP      = g++.exe -D__DEBUG__
 CC       = gcc.exe -D__DEBUG__
 WINDRES  = windres.exe
-OBJ      = main.o ../classes/Interface.o ../classes/Piece.o ../classes/Pawn.o ../classes/King.o ../classes/Knight.o ../classes/Bishop.o ../classes/Queen.o ../classes/Rook.o
-LINKOBJ  = main.o ../classes/Interface.o ../classes/Piece.o ../classes/Pawn.o ../classes/King.o ../classes/Knight.o ../classes/Bishop.o ../classes/Queen.o ../classes/Rook.o
+OBJ      = main.o ../classes/Piece.o ../classes/Pawn.o ../classes/King.o ../classes/Knight.o ../classes/Bishop.o ../classes/Queen.o ../classes/Rook.o ../Classes/Game.o
+LINKOBJ  = main.o ../classes/Piece.o ../classes/Pawn.o ../classes/King.o ../classes/Knight.o ../classes/Bishop.o ../classes/Queen.o ../classes/Rook.o ../Classes/Game.o
 LIBS     = -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib" -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib" -static-libgcc -O0 -L"C:/SFML-2.4.2/lib" -mwindows -lsfml-audio -lsfml-graphics -lsfml-window -lsfml-system -g3
 INCS     = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"C:/SFML-2.4.2/include"
 CXXINCS  = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include/c++" -I"C:/SFML-2.4.2/include"
@@ -27,9 +27,6 @@ $(BIN): $(OBJ)
 main.o: main.cpp
 	$(CPP) -c main.cpp -o main.o $(CXXFLAGS)
 
-../classes/Interface.o: ../classes/Interface.cpp
-	$(CPP) -c ../classes/Interface.cpp -o ../classes/Interface.o $(CXXFLAGS)
-
 ../classes/Piece.o: ../classes/Piece.cpp
 	$(CPP) -c ../classes/Piece.cpp -o ../classes/Piece.o $(CXXFLAGS)
 
@@ -50,3 +47,6 @@ main.o: main.cpp
 
 ../classes/Rook.o: ../classes/Rook.cpp
 	$(CPP) -c ../classes/Rook.cpp -o ../classes/Rook.o $(CXXFLAGS)
+
+../Classes/Game.o: ../Classes/Game.cpp
+	$(CPP) -c ../Classes/Game.cpp -o ../Classes/Game.o $(CXXFLAGS)

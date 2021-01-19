@@ -2,53 +2,25 @@
 // Case 2 = 119 147 85 (RGB)
 // Case em destaque = 246 246 105 (RGB)
 	
-#include "../Classes/Interface.h"	
+#include "../Classes/Game.h"	
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
 #define rows 8
 #define columns 8
 
-// Define a posição inicial das peças
-int board[8][8] = 							//IDEIA : Podemos iniciar o board em branco e fazer com que as 
-    { 81, 91,101,111,121,102, 92, 82,		//classes das pecas editem a variavel board colocando-se em 
-      71, 72, 73, 74, 75, 76, 77, 78, 		//cada casa. Assim podemos fazer as verificacoes de validade 
-      0, 0, 0, 0, 0, 0, 0, 0,				//na propria classe da peca e caso seja valido realizamos o
-      0, 0, 0, 0, 0, 0, 0, 0,				//movimento
-      0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0, 0, 0, 0, 0, 0,
-      11, 12, 13, 14, 15, 16, 17, 18,
-      21, 31, 41, 51, 61, 42, 32, 22};	
-      
-/* OLD BOARD ======================================================
-   
-int board[8][8] = 						
-    { 8, 9,10,11,12,10, 9, 8,	
-      7, 7, 7, 7, 7, 7, 7, 7, 	
-      0, 0, 0, 0, 0, 0, 0, 0,			
-      0, 0, 0, 0, 0, 0, 0, 0,			
-      0, 0, 0, 0, 0, 0, 0, 0,           
-      0, 0, 0, 0, 0, 0, 0, 0,           
-      1, 1, 1, 1, 1, 1, 1, 1,   
-      2, 3, 4, 5, 6, 4, 3, 2};	  
-=============================================================== */ 
-
-int main(){
-	
-	Interface Chess_Window;
+int main(){	
+	Game Chess_Game;
 	
 	sf::RenderWindow window(sf::VideoMode(rows*100, columns*100), "Xadrez");
     sf::RectangleShape grid[rows][columns];
 	sf::Vector2f cellSize(100, 100);
     
     // Fonte para indicar as posições
-    
+
 	sf::Font font;
 	
-	if(!font.loadFromFile("fonte/RobotoBold.ttf")){
-		std::cout << "Hello World!" << std::endl;
-		system("pause");
-	}
+	font.loadFromFile("fonte/RobotoBold.ttf");
 	
 	sf::Text text[4];
 	
@@ -95,7 +67,7 @@ int main(){
     texture[9].loadFromFile("images/bishop_black.png");
     texture[10].loadFromFile("images/queen_black.png");
     texture[11].loadFromFile("images/king_black.png");
-        
+	    
     for (int i = 0; i < 12; i++){
 		texture[i].setSmooth(true);
 		sprite[i].setTexture(texture[i]);
@@ -115,14 +87,14 @@ int main(){
 				case sf::Event::MouseButtonPressed:		//espera por um clique
 
 					if(sf::Mouse::Left == event.mouseButton.button){	//botao esquerdo
-						
+					
 						sf::Vector2i localPosition = sf::Mouse::getPosition(window); // Pega a posição do mouse referente a janela
-						Chess_Window.Event_Left(localPosition.x, localPosition.y, board);   // Chama a rotina responsável pelos eventos do clique esquerdo
+						Chess_Game.Event_Left(localPosition.x, localPosition.y);   // Chama a rotina responsável pelos eventos do clique esquerdo
 						
 						
 					} else if(sf::Mouse::Right == event.mouseButton.button){ // botao direito
 						
-						Chess_Window.Event_Right();	 // Chama a rotina responsável pelos eventos do clique direito
+						Chess_Game.Event_Right();	 // Chama a rotina responsável pelos eventos do clique direito
 					
 					}
 					break;
@@ -146,19 +118,25 @@ int main(){
 				}
 	            
 				// Destaca as casas selecionadas para indicar o movimento	            
-				if(Chess_Window.printOld){
-		        	grid[Chess_Window.oldPos[0]][Chess_Window.oldPos[1]].setFillColor(sf::Color(246,246,105));
-				} else if(Chess_Window.printNew){
-		        	grid[Chess_Window.oldPos[0]][Chess_Window.oldPos[1]].setFillColor(sf::Color(246,246,105));
-					grid[Chess_Window.newPos[0]][Chess_Window.newPos[1]].setFillColor(sf::Color(246,246,105));
+				if(Chess_Game.printOld){
+					if(i == Chess_Game.oldPos[0] && j == Chess_Game.oldPos[1]){
+						grid[Chess_Game.oldPos[0]][Chess_Game.oldPos[1]].setFillColor(sf::Color(246,246,105));	
+					}
+				} else if(Chess_Game.printNew){
+		        	if(i == Chess_Game.oldPos[0] && j == Chess_Game.oldPos[1]){
+						grid[Chess_Game.oldPos[0]][Chess_Game.oldPos[1]].setFillColor(sf::Color(246,246,105));	
+					}
+					if(i == Chess_Game.newPos[0] && j == Chess_Game.newPos[1]){
+						grid[Chess_Game.newPos[0]][Chess_Game.newPos[1]].setFillColor(sf::Color(246,246,105));
+					}
 				}
 				
 	            window.draw(grid[i][j]);
 
-	            // Coloca os sprites nas posições do tabuleiro conforme a matriz board
-	            if (board[j][i] != 0){
-					sprite[(board[j][i])/10 - 1].setPosition(i*cellSize.x + 0.5f, j*cellSize.y + 0.5f);
-	            	window.draw(sprite[(board[j][i])/10 - 1]);
+	            // Coloca os sprites nas posições do tabuleiro conforme a matriz Chess_Game.board
+	            if (Chess_Game.board[j][i] != 0){
+					sprite[(Chess_Game.board[j][i])/10 - 1].setPosition(i*cellSize.x + 0.5f, j*cellSize.y + 0.5f);
+	            	window.draw(sprite[(Chess_Game.board[j][i])/10 - 1]);
 				}
         	}
     	}
