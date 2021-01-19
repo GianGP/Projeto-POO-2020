@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 king::king():piece(){
+	castling = true;
 }
 
 king::king(bool color, int posX, int posY, int number):piece(color, posX, posY, number){
@@ -13,14 +14,30 @@ int king::validMovement(int newPos[2], int board[][8]){
 	
 	
 	if (white){
+		
+		if((movement_x == 2 && movement_y == 0)){
+				return (newPos[0] - position[0]);
+			}
+		
 		if ((movement_x == 1 && movement_y == 0) || (movement_x == 0 && movement_y == 1) || (movement_x == 1 && movement_y == 1)){
 			return 1;
 		}
 	}
 	else{
+		
+		if((movement_x == 2 && movement_y == 0)){
+				return (newPos[0] - position[0]);
+			}
+		
+		
 		if ((movement_x == 1 && movement_y == 0) || (movement_x == 0 && movement_y == 1) || (movement_x == 1 && movement_y == 1)){
 			return 1;
 		}
 	}
 	return 0;
+}
+
+void king::setData(bool inputCastling){
+	castling = inputCastling;
+	return;
 }

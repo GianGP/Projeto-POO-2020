@@ -1,6 +1,7 @@
 #include "Pieces.h"
 
 rook::rook():piece(){
+	castling = true;
 }
 
 rook::rook(bool color, int posX, int posY, int number) : piece(color, posX, posY, number) {}
@@ -43,4 +44,8 @@ int rook::validMovement(int newPos[2], int board[][8])
 		}
 		return 1;
 	}
+}
+
+void rook::setData(bool inputCastling){
+	castling = inputCastling;
 }

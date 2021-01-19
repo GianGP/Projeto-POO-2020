@@ -30,9 +30,11 @@ class bishop : public piece
 class rook : public piece
 {
 	public:
+		bool castling;
 		rook();
 		rook(bool color, int posX, int posY, int number);
 		int validMovement(int newPos[2], int board[][8]);
+		void setData (bool inputCastling);
 };
 
 class knight : public piece
@@ -55,7 +57,9 @@ class queen : public bishop, rook
 class king : public piece
 {
 	public:
+		bool castling;
 		king();
 		king(bool color, int posX, int posY, int number);
 		int validMovement (int newPos[2], int board[][8]);
+		void setData (bool inputCastling);
 };

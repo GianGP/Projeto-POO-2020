@@ -20,11 +20,11 @@ Game::Game(){
 	}
 	
 	for(int i = 0; i < 2; i++){
-			WR[i].setData(true, 7*i, 7, 21+i);
+			WR[i].piece::setData(true, 7*i, 7, 21+i);
 			WKN[i].setData(true, 5*i + 1, 7, 31+i);
 			WB[i].setData(true, 3*i + 2, 7, 41+i);
 			
-			BR[i].setData(false, 7*i, 0, 81+i);
+			BR[i].piece::setData(false, 7*i, 0, 81+i);
 			BKN[i].setData(false, 5*i + 1, 0, 91+i);
 			BB[i].setData(false, 3*i + 2, 0, 101+i);
 			
@@ -39,22 +39,23 @@ Game::Game(){
 	
 	WQ[0].bishop::setData(true, 3, 7, 51);
 	BQ[0].bishop::setData(false, 3, 0, 111);
-	
-	WKG.setData(true, 4, 7, 61);
-	BKG.setData(false, 4, 0, 121);
-	
 	board[7][3] = 51;
 	board[0][3] = 111;
+	
+	WKG.piece::setData(true, 4, 7, 61);
+	BKG.piece::setData(false, 4, 0, 121);
 	board[7][4] = 61;
 	board[0][4] = 121;
 }
 
 int Game::movementValid(){
+	int castlingPos[2];
+	castlingPos[1] = newPos[1];
 	int pieceID = board[oldPos[1]][oldPos[0]]/10;
 	int piecePos = board[oldPos[1]][oldPos[0]]%10;
 	
 	// Decide qual cor fara o movimento
-	if(nextMove){
+	/*if(nextMove){
 		if(board[oldPos[1]][oldPos[0]] > 61){
 			return 1;
 		}
@@ -62,7 +63,7 @@ int Game::movementValid(){
 		if(board[oldPos[1]][oldPos[0]] < 71){
 			return 1;
 		}
-	}
+	}*/
 	
 	//nao deixa comer pecas da sua cor
 	if (board[newPos[1]][newPos[0]] != 0){
@@ -71,6 +72,7 @@ int Game::movementValid(){
 		}
 	} 
 	
+	//Verifica qual foi a peça escolhida e determina se o movimento é válido ou não
 	switch (pieceID){
 		//PEAO BRANCO
 		case 1:
@@ -84,6 +86,9 @@ int Game::movementValid(){
 		case 2:
 			if(WR[piecePos-1].validMovement(newPos,board)){
 				WR[piecePos-1].move(newPos,board);
+				if(WR[piecePos-1].castling){
+					WR[piecePos-1].castling = false;
+				}
 				return 0;
 			}
 			break;
@@ -108,16 +113,38 @@ int Game::movementValid(){
 		case 5:
 			if(WQ[piecePos-1].validMovement(newPos,board)){
 				WQ[piecePos-1].bishop::move(newPos,board);
-				//WQ[piecePos-1].rook::move(newPos,board);
 				return 0;
 			}
 			break;
 		
 		//REI BRANCO
 		case 6:
-			if(WKG.validMovement(newPos,board)){
-				WKG.move(newPos,board);
+			if(WKG.castling && WR[1].castling){
+				castlingPos[0] = newPos[0]-1;
+				if(WKG.validMovement(newPos,board)==2 && WR[1].validMovement(oldPos,board) == 1){
+					WKG.move(newPos,board);
+					WKG.castling = false;
+					WR[1].move(castlingPos,board);
+					WR[1].castling = false;
 				return 0;
+				}
+			}
+			if(WKG.castling && WR[0].castling){
+				castlingPos[0] = newPos[0]+1;
+				if(WKG.validMovement(newPos,board) == -2 && WR[0].validMovement(oldPos,board) == 1){
+					WKG.move(newPos,board);
+					WKG.castling = false;
+					WR[0].move(castlingPos,board);
+					WR[0].castling = false;
+				return 0;
+				}
+			}
+			if(WKG.validMovement(newPos,board) == 1){
+				WKG.move(newPos,board);
+				if(WKG.castling){
+					WKG.castling = false;
+				}
+				return 0;		
 			}
 			break;
 			
@@ -133,6 +160,9 @@ int Game::movementValid(){
 		case 8:
 			if(BR[piecePos-1].validMovement(newPos,board)){
 				BR[piecePos-1].move(newPos,board);
+				if(BR[piecePos-1].castling){
+					BR[piecePos-1].castling = false;
+				}
 				return 0;
 			}
 			break;
@@ -163,8 +193,31 @@ int Game::movementValid(){
 			
 		//REI PRETO
 		case 12:
-			if(BKG.validMovement(newPos,board)){
+			if(BKG.castling && BR[1].castling){
+				castlingPos[0] = newPos[0]-1;
+				if(BKG.validMovement(newPos,board)==2 && WR[1].validMovement(oldPos,board) == 1){
+					BKG.move(newPos,board);
+					BKG.castling = false;
+					BR[1].move(castlingPos,board);
+					BR[1].castling = false;
+				return 0;
+				}
+			}
+			if(BKG.castling && BR[0].castling){
+				castlingPos[0] = newPos[0]+1;
+				if(BKG.validMovement(newPos,board) == -2 && BR[0].validMovement(oldPos,board) == 1){
+					BKG.move(newPos,board);
+					BKG.castling = false;
+					BR[0].move(castlingPos,board);
+					BR[0].castling = false;
+				return 0;
+				}
+			}
+			if(BKG.validMovement(newPos,board) == 1){
 				BKG.move(newPos,board);
+				if(BKG.castling){
+					BKG.castling = false;
+				}
 				return 0;
 			}
 			break;	
@@ -202,4 +255,3 @@ void Game::Event_Right(){
 	printOld = false;
 	printNew = false;
 }
-

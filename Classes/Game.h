@@ -21,7 +21,9 @@ class Game{
 		queen BQ[9];
 		king BKG;
 		
+		//Validacao do movimento
 		int movementValid();
+		
 	public:
 		Game();
 		bool printOld, printNew;

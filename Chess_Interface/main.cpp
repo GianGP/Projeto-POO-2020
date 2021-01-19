@@ -17,7 +17,6 @@ int main(){
 	sf::Vector2f cellSize(100, 100);
     
     // Fonte para indicar as posições
-
 	sf::Font font;
 	
 	font.loadFromFile("fonte/RobotoBold.ttf");
