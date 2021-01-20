@@ -1,12 +1,18 @@
 #include <iostream>
 #include "Pieces.h"
 
-piece::piece(bool color, bool state, int posX, int posY, int number)
+piece::piece(){
+	white = true;
+	position[0] = 0;
+	position[1] = 0;
+	ID = 0;
+}
+
+piece::piece(bool color, int posX, int posY, int number)
 {
 	white = color;
-	alive = state;
-	position[0] = posX;
-	position[1] = posY;
+	position[1] = posX;
+	position[0] = posY;
 	ID = number;
 }
 
@@ -18,18 +24,10 @@ void piece::move(int newPos[2], int board [8][8])
 	position[1] = newPos[1];
 }
 
-void piece::setData(int pos[2], bool old)
+void piece::setData(bool color, int posX, int posY, int number)
 {
-	if(old)
-	{
-		position[0] = pos[0];
-		position[1] = pos[1];
-	}
-	/*
-	else
-	{
-		newPos[0] = position[0];
-		newPos[1] = position[1];
-	}
-	*/
+	white = color;
+	position[0] = posX;
+	position[1] = posY;
+	ID = number;
 }
