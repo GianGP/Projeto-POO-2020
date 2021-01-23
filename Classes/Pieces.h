@@ -11,6 +11,7 @@ class piece
 		void setData(bool color, int posX, int posY, int number);
 		//CH01
 		void getPos(int tempPos[2]); // OK
+		virtual int validMovement (int newPos[2], int board[][8]);
 };
 
 class pawn : public piece
