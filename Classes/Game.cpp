@@ -53,6 +53,9 @@ int Game::movementValid(){
 	castlingPos[1] = newPos[1];
 	int pieceID = board[oldPos[1]][oldPos[0]]/10;
 	int piecePos = board[oldPos[1]][oldPos[0]]%10;
+	//CH01
+	int tempPos[2] = {0,0}; // OK
+	int tempID = board[newPos[1]][newPos[0]];
 	
 	// Decide qual cor fara o movimento
 	/*if(nextMove){
@@ -77,8 +80,18 @@ int Game::movementValid(){
 		//PEAO BRANCO
 		case 1:
 			if(WP[piecePos-1].validMovement(newPos, board)){
+				WP[piecePos-1].getPos(tempPos); // CH01 OK
 				WP[piecePos-1].move(newPos,board);
-				return 0;
+				//CH01
+				if (WKG.check(board)){
+					WP[piecePos-1].move(tempPos,board);
+					board[newPos[1]][newPos[0]] = tempID;
+					return 1;
+				}
+				else{
+					return 0;
+				}
+				//CH01 OK
 			}
 			break;
 		
@@ -151,12 +164,22 @@ int Game::movementValid(){
 		//PEAO PRETO
 		case 7:
 			if(BP[piecePos-1].validMovement(newPos, board)){
+				BP[piecePos-1].getPos(tempPos); // CH01 OK
 				BP[piecePos-1].move(newPos,board);
-				return 0;
+				//CH01
+				if (BKG.check(board)){
+					BP[piecePos-1].move(tempPos,board);
+					board[newPos[1]][newPos[0]] = tempID;
+					return 1;
+				}
+				else{
+					return 0;
+				}
+				//CH01 OK
 			}
 			break;
 			
-		//TORRE PRETAA
+		//TORRE PRETA
 		case 8:
 			if(BR[piecePos-1].validMovement(newPos,board)){
 				BR[piecePos-1].move(newPos,board);
@@ -167,7 +190,7 @@ int Game::movementValid(){
 			}
 			break;
 			
-		//CAVALO BRANCO	
+		//CAVALO PRETO
 		case 9:
 			if(BKN[piecePos-1].validMovement(newPos,board)){
 				BKN[piecePos-1].move(newPos,board);
@@ -175,7 +198,7 @@ int Game::movementValid(){
 			}	
 			break;
 			
-		//BISPO BRANCO
+		//BISPO PRETO
 		case 10:
 			if(BB[piecePos-1].validMovement(newPos,board)){
 				BB[piecePos-1].move(newPos,board);

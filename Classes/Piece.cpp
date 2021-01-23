@@ -31,3 +31,9 @@ void piece::setData(bool color, int posX, int posY, int number)
 	position[1] = posY;
 	ID = number;
 }
+//CH01
+void piece::getPos(int tempPos[2]){ // OK
+	tempPos[0] = position[0];
+	tempPos[1] = position[1];
+	return;
+}
