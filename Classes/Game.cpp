@@ -58,7 +58,7 @@ int Game::movementValid(){
 	int tempID = board[newPos[1]][newPos[0]];
 	
 	// Decide qual cor fara o movimento
-	/*if(nextMove){
+	if(nextMove){
 		if(board[oldPos[1]][oldPos[0]] > 61){
 			return 1;
 		}
@@ -66,7 +66,7 @@ int Game::movementValid(){
 		if(board[oldPos[1]][oldPos[0]] < 71){
 			return 1;
 		}
-	}*/
+	}
 	
 	//nao deixa comer pecas da sua cor
 	if (board[newPos[1]][newPos[0]] != 0){
