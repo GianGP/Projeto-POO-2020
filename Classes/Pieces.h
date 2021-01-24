@@ -9,6 +9,8 @@ class piece
 		piece(bool color, int posX, int posY, int number);
 		void move(int newPos[2], int board [8][8]);
 		void setData(bool color, int posX, int posY, int number);
+		//CH01
+		void getPos(int tempPos[2]); // OK
 };
 
 class pawn : public piece
@@ -62,4 +64,6 @@ class king : public piece
 		king(bool color, int posX, int posY, int number);
 		int validMovement (int newPos[2], int board[][8]);
 		void setData (bool inputCastling);
+		//CH01
+		int check(int board[][8]); // OK
 };

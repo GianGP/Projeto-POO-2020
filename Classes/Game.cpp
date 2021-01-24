@@ -53,9 +53,12 @@ int Game::movementValid(){
 	castlingPos[1] = newPos[1];
 	int pieceID = board[oldPos[1]][oldPos[0]]/10;
 	int piecePos = board[oldPos[1]][oldPos[0]]%10;
+	//CH01
+	int tempPos[2] = {0,0}; // OK
+	int tempID = board[newPos[1]][newPos[0]];
 	
 	// Decide qual cor fara o movimento
-	if(nextMove){
+	/*if(nextMove){
 		if(board[oldPos[1]][oldPos[0]] > 61){
 			return 1;
 		}
@@ -63,7 +66,7 @@ int Game::movementValid(){
 		if(board[oldPos[1]][oldPos[0]] < 71){
 			return 1;
 		}
-	}
+	}*/
 	
 	//nao deixa comer pecas da sua cor
 	if (board[newPos[1]][newPos[0]] != 0){
@@ -77,167 +80,288 @@ int Game::movementValid(){
 		//PEAO BRANCO
 		case 1:
 			if(WP[piecePos-1].validMovement(newPos, board)){
+				WP[piecePos-1].getPos(tempPos); // CH01 OK
 				WP[piecePos-1].move(newPos,board);
-				
-				// Promoção peão para rainha
-				if (newPos[1] == 0){				
-					WQ[piecePos].bishop::setData(true, newPos[0], newPos[1], 50 + piecePos + 1);
-					board[newPos[1]][newPos[0]] = 50 + piecePos + 1;
+				//CH01
+				if (WKG.check(board)){
+					WP[piecePos-1].move(tempPos,board);
+					board[newPos[1]][newPos[0]] = tempID;
+					return 1;
 				}
-				
-				return 0;
+				else{
+					// Promoção peão para rainha
+					if (newPos[1] == 0){				
+						WQ[piecePos].bishop::setData(true, newPos[0], newPos[1], 50 + piecePos + 1);
+						board[newPos[1]][newPos[0]] = 50 + piecePos + 1;
+					}
+					
+					return 0;
+				}
+				//CH01 OK
 			}
 			break;
 		
 		//TORRE BRANCA
 		case 2:
 			if(WR[piecePos-1].validMovement(newPos,board)){
+				WR[piecePos-1].getPos(tempPos);
 				WR[piecePos-1].move(newPos,board);
-				if(WR[piecePos-1].castling){
-					WR[piecePos-1].castling = false;
+				if (WKG.check(board)){
+					WR[piecePos-1].move(tempPos,board);
+					board[newPos[1]][newPos[0]] = tempID;
+					return 1;
 				}
-				return 0;
+				else{
+					if(WR[piecePos-1].castling){
+						WR[piecePos-1].castling = false;
+					}
+					return 0;
+				}
 			}
 			break;
 		
 		//CAVALO BRANCO	
 		case 3:
 			if(WKN[piecePos-1].validMovement(newPos,board)){
+				WKN[piecePos-1].getPos(tempPos);
 				WKN[piecePos-1].move(newPos,board);
-				return 0;
+				if (WKG.check(board)){
+					WKN[piecePos-1].move(tempPos,board);
+					board[newPos[1]][newPos[0]] = tempID;
+					return 1;
+				}
+				else{
+					return 0;
+				}
 			}	
 			break;
 			
 		//BISPO BRANCO
 		case 4:
 			if(WB[piecePos-1].validMovement(newPos,board)){
+				WB[piecePos-1].getPos(tempPos);
 				WB[piecePos-1].move(newPos,board);
-				return 0;
+				if (WKG.check(board)){
+					WB[piecePos-1].move(tempPos,board);
+					board[newPos[1]][newPos[0]] = tempID;
+					return 1;
+				}
+				else{
+					return 0;
+				}
 			}
 			break;
 		
 		//RAINHA BRANCA
 		case 5:
-			if(WQ[piecePos-1].validMovement(newPos,board)){
+			WQ[piecePos-1].bishop::getPos(tempPos);
+			if(WQ[piecePos-1].validMovement(newPos,board)){	
 				WQ[piecePos-1].bishop::move(newPos,board);
-				return 0;
+				if (WKG.check(board)){
+					WQ[piecePos-1].bishop::move(tempPos,board);
+					board[newPos[1]][newPos[0]] = tempID;
+					return 1;
+				}
+				else{
+					return 0;
+				}
 			}
 			break;
 		
 		//REI BRANCO
 		case 6:
-			if(WKG.castling && WR[1].castling){
+			WKG.getPos(tempPos);
+			if(WKG.castling && WR[1].castling && !WKG.check(board)){
 				castlingPos[0] = newPos[0]-1;
 				if(WKG.validMovement(newPos,board)==2 && WR[1].validMovement(oldPos,board) == 1){
 					WKG.move(newPos,board);
-					WKG.castling = false;
-					WR[1].move(castlingPos,board);
-					WR[1].castling = false;
-				return 0;
+					if (WKG.check(board)){
+						WKG.move(tempPos,board);
+						return 1;
+					}
+					else{
+						WKG.castling = false;	
+						WR[1].move(castlingPos,board);
+						WR[1].castling = false;
+						return 0;
+					}	
 				}
 			}
-			if(WKG.castling && WR[0].castling){
+			if(WKG.castling && WR[0].castling && !WKG.check(board)){
 				castlingPos[0] = newPos[0]+1;
 				if(WKG.validMovement(newPos,board) == -2 && WR[0].validMovement(oldPos,board) == 1){
 					WKG.move(newPos,board);
-					WKG.castling = false;
-					WR[0].move(castlingPos,board);
-					WR[0].castling = false;
-				return 0;
+					if (WKG.check(board)){
+						WKG.move(tempPos,board);
+						return 1;
+					}
+					else{
+						WKG.castling = false;	
+						WR[0].move(castlingPos,board);
+						WR[0].castling = false;
+						return 0;
+					}
 				}
 			}
 			if(WKG.validMovement(newPos,board) == 1){
 				WKG.move(newPos,board);
-				if(WKG.castling){
-					WKG.castling = false;
+				if (WKG.check(board)){
+					WKG.move(tempPos,board);
+					board[newPos[1]][newPos[0]] = tempID;
+					return 1;
 				}
-				return 0;		
+				else{
+					if(WKG.castling){
+						WKG.castling = false;
+					}
+					return 0;
+				}
 			}
 			break;
 			
 		//PEAO PRETO
 		case 7:
 			if(BP[piecePos-1].validMovement(newPos, board)){
+				BP[piecePos-1].getPos(tempPos); // CH01 OK
 				BP[piecePos-1].move(newPos,board);
-				
-				// Promoção peão para rainha
-				if (newPos[1] == 7){				
-					BQ[piecePos].bishop::setData(true, newPos[0], newPos[1], 110 + piecePos + 1);
-					board[newPos[1]][newPos[0]] = 110 + piecePos + 1;
+				//CH01
+				if (BKG.check(board)){
+					BP[piecePos-1].move(tempPos,board);
+					board[newPos[1]][newPos[0]] = tempID;
+					return 1;
 				}
-				
-				return 0;
+				else{
+					// Promoção peão para rainha
+					if (newPos[1] == 0){				
+						BQ[piecePos].bishop::setData(true, newPos[0], newPos[1], 110 + piecePos + 1);
+						board[newPos[1]][newPos[0]] = 110 + piecePos + 1;
+					}
+					return 0;
+				}
+				//CH01 OK
 			}
 			break;
 			
-		//TORRE PRETAA
+		//TORRE PRETA
 		case 8:
 			if(BR[piecePos-1].validMovement(newPos,board)){
+				BR[piecePos-1].getPos(tempPos);
 				BR[piecePos-1].move(newPos,board);
-				if(BR[piecePos-1].castling){
-					BR[piecePos-1].castling = false;
+				if (BKG.check(board)){
+					BR[piecePos-1].move(tempPos,board);
+					board[newPos[1]][newPos[0]] = tempID;
+					return 1;
 				}
-				return 0;
+				else{
+					if(BR[piecePos-1].castling){
+						BR[piecePos-1].castling = false;
+					}
+					return 0;
+				}
 			}
 			break;
 			
-		//CAVALO BRANCO	
+		//CAVALO PRETO
 		case 9:
 			if(BKN[piecePos-1].validMovement(newPos,board)){
+				BKN[piecePos-1].getPos(tempPos);
 				BKN[piecePos-1].move(newPos,board);
-				return 0;
+				if (BKG.check(board)){
+					BKN[piecePos-1].move(tempPos,board);
+					board[newPos[1]][newPos[0]] = tempID;
+					return 1;
+				}
+				else{
+					return 0;
+				}
 			}	
 			break;
 			
-		//BISPO BRANCO
+		//BISPO PRETO
 		case 10:
 			if(BB[piecePos-1].validMovement(newPos,board)){
+				BB[piecePos-1].getPos(tempPos);
 				BB[piecePos-1].move(newPos,board);
-				return 0;
+				if (BKG.check(board)){
+					BB[piecePos-1].move(tempPos,board);
+					board[newPos[1]][newPos[0]] = tempID;
+					return 1;
+				}
+				else{
+					return 0;
+				}
 			}
 			break;				
 		
 		//RAINHA NEGRA
 		case 11:
+			BQ[piecePos-1].bishop::getPos(tempPos);
 			if(BQ[piecePos-1].validMovement(newPos,board)){
 				BQ[piecePos-1].bishop::move(newPos,board);
-				return 0;
+				if (BKG.check(board)){
+					BQ[piecePos-1].bishop::move(tempPos,board);
+					board[newPos[1]][newPos[0]] = tempID;
+					return 1;
+				}
+				else{
+					return 0;
+				}
 			}
-			break;
+			break;		
 			
 		//REI PRETO
 		case 12:
-			if(BKG.castling && BR[1].castling){
+			BKG.getPos(tempPos);
+			if(BKG.castling && BR[1].castling && !BKG.check(board)){
 				castlingPos[0] = newPos[0]-1;
-				if(BKG.validMovement(newPos,board)==2 && WR[1].validMovement(oldPos,board) == 1){
+				if(BKG.validMovement(newPos,board)==2 && BR[1].validMovement(oldPos,board) == 1){
 					BKG.move(newPos,board);
-					BKG.castling = false;
-					BR[1].move(castlingPos,board);
-					BR[1].castling = false;
-				return 0;
+					if (BKG.check(board)){
+						BKG.move(tempPos,board);
+						return 1;
+					}
+					else{
+						BKG.castling = false;	
+						BR[1].move(castlingPos,board);
+						BR[1].castling = false;
+						return 0;
+					}
 				}
 			}
-			if(BKG.castling && BR[0].castling){
+			if(BKG.castling && BR[0].castling && !BKG.check(board)){
 				castlingPos[0] = newPos[0]+1;
 				if(BKG.validMovement(newPos,board) == -2 && BR[0].validMovement(oldPos,board) == 1){
 					BKG.move(newPos,board);
-					BKG.castling = false;
-					BR[0].move(castlingPos,board);
-					BR[0].castling = false;
-				return 0;
+					if (BKG.check(board)){
+						BKG.move(tempPos,board);
+						return 1;
+					}
+					else{
+						BKG.castling = false;	
+						BR[0].move(castlingPos,board);
+						BR[0].castling = false;
+						return 0;
+					}
 				}
 			}
 			if(BKG.validMovement(newPos,board) == 1){
 				BKG.move(newPos,board);
-				if(BKG.castling){
-					BKG.castling = false;
+				if (BKG.check(board)){
+					BKG.move(tempPos,board);
+					board[newPos[1]][newPos[0]] = tempID;
+					return 1;
 				}
-				return 0;
+				else{
+					if(BKG.castling){
+						BKG.castling = false;
+					}
+					return 0;
+				}
 			}
 			break;	
 	}
 
-return 1; // Caso nao valide o movimento, retorna 0 para que nao execute
+return 1; // Caso nao valide o movimento, retorna 1 para que nao execute
 }
 
 void Game::Event_Left(int x, int y){
