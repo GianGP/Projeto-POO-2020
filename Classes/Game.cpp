@@ -89,6 +89,12 @@ int Game::movementValid(){
 					return 1;
 				}
 				else{
+					// Promoção peão para rainha
+					if (newPos[1] == 0){				
+						WQ[piecePos].bishop::setData(true, newPos[0], newPos[1], 50 + piecePos + 1);
+						board[newPos[1]][newPos[0]] = 50 + piecePos + 1;
+					}
+					
 					return 0;
 				}
 				//CH01 OK
@@ -225,6 +231,11 @@ int Game::movementValid(){
 					return 1;
 				}
 				else{
+					// Promoção peão para rainha
+					if (newPos[1] == 0){				
+						BQ[piecePos].bishop::setData(true, newPos[0], newPos[1], 110 + piecePos + 1);
+						board[newPos[1]][newPos[0]] = 110 + piecePos + 1;
+					}
 					return 0;
 				}
 				//CH01 OK
