@@ -2,16 +2,29 @@
 #include<iostream>
 
 Game::Game(){
+	//Variavel que controla qual cor realiza o movimento (true: brancas, false: pretas)
 	nextMove = true;
+	
+	//Variaveis que controlam as casas que são pintadas em destaque no tabuleiro. 
+	//printOld true - casa selecionada (e que contem peça fica em destaque).
+	//printNew true - destaca o último movimento realizado, pintando a casa de origem do movimento e casa final.
 	printOld = false;
 	printNew = false;
+	
+	//Variável que controla as casas que são pintadas em destaque quando um cheque é realizado. Pinta a casa do rei e a casa da peça que esta atacando o rei.
+	printCheck = false;
 	
 	oldPos[0] = 0;
 	oldPos[1] = 0;
 	newPos[0] = 0;
 	newPos[1] = 0;
 	
-	//Atribui valore para todos os objetos referente as peças
+	checkPos[0][0] = 0;
+	checkPos[0][1] = 0;
+	checkPos[1][0] = 0;
+	checkPos[1][1] = 0;
+	
+	//Atribui valore para todos os objetos referente as peças. Também atualiza o valor na matriz board conforme as peças são criadas
 	for(int i = 0; i < 8; i++){
 		WP[i].setData(true, i, 6, 11+i);
 		BP[i].setData(false, i, 1, 71+i);
@@ -57,7 +70,7 @@ int Game::movementValid(){
 	int tempPos[2] = {0,0}; // OK
 	int tempID = board[newPos[1]][newPos[0]];
 	
-	// Decide qual cor fara o movimento
+	// Decide qual cor fara o movimento. 
 	if(nextMove){
 		if(board[oldPos[1]][oldPos[0]] > 61){
 			return 1;
@@ -83,10 +96,10 @@ int Game::movementValid(){
 				WP[piecePos-1].getPos(tempPos); // CH01 OK
 				WP[piecePos-1].move(newPos,board);
 				//CH01
-				if (WKG.check(board)){
+				if (WKG.check(board,checkPos)){
 					WP[piecePos-1].move(tempPos,board);
 					board[newPos[1]][newPos[0]] = tempID;
-					return 1;
+					return 2;
 				}
 				else{
 					// Promoção peão para rainha
@@ -106,10 +119,10 @@ int Game::movementValid(){
 			if(WR[piecePos-1].validMovement(newPos,board)){
 				WR[piecePos-1].getPos(tempPos);
 				WR[piecePos-1].move(newPos,board);
-				if (WKG.check(board)){
+				if (WKG.check(board,checkPos)){
 					WR[piecePos-1].move(tempPos,board);
 					board[newPos[1]][newPos[0]] = tempID;
-					return 1;
+					return 2;
 				}
 				else{
 					if(WR[piecePos-1].castling){
@@ -125,10 +138,10 @@ int Game::movementValid(){
 			if(WKN[piecePos-1].validMovement(newPos,board)){
 				WKN[piecePos-1].getPos(tempPos);
 				WKN[piecePos-1].move(newPos,board);
-				if (WKG.check(board)){
+				if (WKG.check(board,checkPos)){
 					WKN[piecePos-1].move(tempPos,board);
 					board[newPos[1]][newPos[0]] = tempID;
-					return 1;
+					return 2;
 				}
 				else{
 					return 0;
@@ -141,10 +154,10 @@ int Game::movementValid(){
 			if(WB[piecePos-1].validMovement(newPos,board)){
 				WB[piecePos-1].getPos(tempPos);
 				WB[piecePos-1].move(newPos,board);
-				if (WKG.check(board)){
+				if (WKG.check(board,checkPos)){
 					WB[piecePos-1].move(tempPos,board);
 					board[newPos[1]][newPos[0]] = tempID;
-					return 1;
+					return 2;
 				}
 				else{
 					return 0;
@@ -157,10 +170,10 @@ int Game::movementValid(){
 			WQ[piecePos-1].bishop::getPos(tempPos);
 			if(WQ[piecePos-1].validMovement(newPos,board)){	
 				WQ[piecePos-1].bishop::move(newPos,board);
-				if (WKG.check(board)){
+				if (WKG.check(board,checkPos)){
 					WQ[piecePos-1].bishop::move(tempPos,board);
 					board[newPos[1]][newPos[0]] = tempID;
-					return 1;
+					return 2;
 				}
 				else{
 					return 0;
@@ -171,13 +184,13 @@ int Game::movementValid(){
 		//REI BRANCO
 		case 6:
 			WKG.getPos(tempPos);
-			if(WKG.castling && WR[1].castling && !WKG.check(board)){
+			if(WKG.castling && WR[1].castling && !WKG.check(board,checkPos)){
 				castlingPos[0] = newPos[0]-1;
 				if(WKG.validMovement(newPos,board)==2 && WR[1].validMovement(oldPos,board) == 1){
 					WKG.move(newPos,board);
-					if (WKG.check(board)){
+					if (WKG.check(board,checkPos)){
 						WKG.move(tempPos,board);
-						return 1;
+						return 2;
 					}
 					else{
 						WKG.castling = false;	
@@ -187,13 +200,13 @@ int Game::movementValid(){
 					}	
 				}
 			}
-			if(WKG.castling && WR[0].castling && !WKG.check(board)){
+			if(WKG.castling && WR[0].castling && !WKG.check(board,checkPos)){
 				castlingPos[0] = newPos[0]+1;
 				if(WKG.validMovement(newPos,board) == -2 && WR[0].validMovement(oldPos,board) == 1){
 					WKG.move(newPos,board);
-					if (WKG.check(board)){
+					if (WKG.check(board,checkPos)){
 						WKG.move(tempPos,board);
-						return 1;
+						return 2;
 					}
 					else{
 						WKG.castling = false;	
@@ -205,10 +218,10 @@ int Game::movementValid(){
 			}
 			if(WKG.validMovement(newPos,board) == 1){
 				WKG.move(newPos,board);
-				if (WKG.check(board)){
+				if (WKG.check(board,checkPos)){
 					WKG.move(tempPos,board);
 					board[newPos[1]][newPos[0]] = tempID;
-					return 1;
+					return 2;
 				}
 				else{
 					if(WKG.castling){
@@ -225,10 +238,10 @@ int Game::movementValid(){
 				BP[piecePos-1].getPos(tempPos); // CH01 OK
 				BP[piecePos-1].move(newPos,board);
 				//CH01
-				if (BKG.check(board)){
+				if (BKG.check(board,checkPos)){
 					BP[piecePos-1].move(tempPos,board);
 					board[newPos[1]][newPos[0]] = tempID;
-					return 1;
+					return 2;
 				}
 				else{
 					// Promoção peão para rainha
@@ -247,10 +260,10 @@ int Game::movementValid(){
 			if(BR[piecePos-1].validMovement(newPos,board)){
 				BR[piecePos-1].getPos(tempPos);
 				BR[piecePos-1].move(newPos,board);
-				if (BKG.check(board)){
+				if (BKG.check(board,checkPos)){
 					BR[piecePos-1].move(tempPos,board);
 					board[newPos[1]][newPos[0]] = tempID;
-					return 1;
+					return 2;
 				}
 				else{
 					if(BR[piecePos-1].castling){
@@ -266,10 +279,10 @@ int Game::movementValid(){
 			if(BKN[piecePos-1].validMovement(newPos,board)){
 				BKN[piecePos-1].getPos(tempPos);
 				BKN[piecePos-1].move(newPos,board);
-				if (BKG.check(board)){
+				if (BKG.check(board,checkPos)){
 					BKN[piecePos-1].move(tempPos,board);
 					board[newPos[1]][newPos[0]] = tempID;
-					return 1;
+					return 2;
 				}
 				else{
 					return 0;
@@ -282,10 +295,10 @@ int Game::movementValid(){
 			if(BB[piecePos-1].validMovement(newPos,board)){
 				BB[piecePos-1].getPos(tempPos);
 				BB[piecePos-1].move(newPos,board);
-				if (BKG.check(board)){
+				if (BKG.check(board,checkPos)){
 					BB[piecePos-1].move(tempPos,board);
 					board[newPos[1]][newPos[0]] = tempID;
-					return 1;
+					return 2;
 				}
 				else{
 					return 0;
@@ -298,10 +311,10 @@ int Game::movementValid(){
 			BQ[piecePos-1].bishop::getPos(tempPos);
 			if(BQ[piecePos-1].validMovement(newPos,board)){
 				BQ[piecePos-1].bishop::move(newPos,board);
-				if (BKG.check(board)){
+				if (BKG.check(board,checkPos)){
 					BQ[piecePos-1].bishop::move(tempPos,board);
 					board[newPos[1]][newPos[0]] = tempID;
-					return 1;
+					return 2;
 				}
 				else{
 					return 0;
@@ -312,13 +325,13 @@ int Game::movementValid(){
 		//REI PRETO
 		case 12:
 			BKG.getPos(tempPos);
-			if(BKG.castling && BR[1].castling && !BKG.check(board)){
+			if(BKG.castling && BR[1].castling && !BKG.check(board,checkPos)){
 				castlingPos[0] = newPos[0]-1;
 				if(BKG.validMovement(newPos,board)==2 && BR[1].validMovement(oldPos,board) == 1){
 					BKG.move(newPos,board);
-					if (BKG.check(board)){
+					if (BKG.check(board,checkPos)){
 						BKG.move(tempPos,board);
-						return 1;
+						return 2;
 					}
 					else{
 						BKG.castling = false;	
@@ -328,13 +341,13 @@ int Game::movementValid(){
 					}
 				}
 			}
-			if(BKG.castling && BR[0].castling && !BKG.check(board)){
+			if(BKG.castling && BR[0].castling && !BKG.check(board,checkPos)){
 				castlingPos[0] = newPos[0]+1;
 				if(BKG.validMovement(newPos,board) == -2 && BR[0].validMovement(oldPos,board) == 1){
 					BKG.move(newPos,board);
-					if (BKG.check(board)){
+					if (BKG.check(board,checkPos)){
 						BKG.move(tempPos,board);
-						return 1;
+						return 2;
 					}
 					else{
 						BKG.castling = false;	
@@ -346,10 +359,10 @@ int Game::movementValid(){
 			}
 			if(BKG.validMovement(newPos,board) == 1){
 				BKG.move(newPos,board);
-				if (BKG.check(board)){
+				if (BKG.check(board,checkPos)){
 					BKG.move(tempPos,board);
 					board[newPos[1]][newPos[0]] = tempID;
-					return 1;
+					return 2;
 				}
 				else{
 					if(BKG.castling){
@@ -364,10 +377,10 @@ int Game::movementValid(){
 return 1; // Caso nao valide o movimento, retorna 1 para que nao execute
 }
 
-void Game::Event_Left(int x, int y){
+void Game::Event_Left(int x, int y, int sizeX, int sizeY){
 	if(!printOld){		//se print old false
-		oldPos[0] = x/100;	//captura a posicao do clique
-		oldPos[1] = y/100;
+		oldPos[0] = x/sizeX;	//captura a posicao do clique
+		oldPos[1] = y/sizeY;
 		if(board[oldPos[1]][oldPos[0]] != 0){		//se nao for zero (casa vazia) seleciona a peca
 			printOld = true;					//seta printOld para que no proximo evento de botao esquerdo não entre no mesmo escopo
 			printNew = false;
@@ -376,15 +389,21 @@ void Game::Event_Left(int x, int y){
 			printNew = false;
 		}		
 	} else if (printOld && !printNew){			//caso uma peca esteja selecionada
-		newPos[0] = x/100; 	//captura a posicao de destino
-		newPos[1] = y/100;
+		newPos[0] = x/sizeX; 	//captura a posicao de destino
+		newPos[1] = y/sizeY;
 		if(movementValid() == 0){
 			printOld = false;
 			printNew = true;
+			printCheck = false;
 			nextMove = nextMove^true;
+		}else if (movementValid() == 2){
+			printOld = false;
+			printNew = false;
+			printCheck = true;
 		}else{
 			printOld = false;
 			printNew = false;
+			printCheck = false;
 		}
 	}
 }
@@ -392,4 +411,5 @@ void Game::Event_Left(int x, int y){
 void Game::Event_Right(){
 	printOld = false;
 	printNew = false;
+	printCheck = false;
 }
