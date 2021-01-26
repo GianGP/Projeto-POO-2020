@@ -232,7 +232,7 @@ int Game::movementValid(){
 				}
 				else{
 					// Promoção peão para rainha
-					if (newPos[1] == 0){				
+					if (newPos[1] == 7){				
 						BQ[piecePos].bishop::setData(true, newPos[0], newPos[1], 110 + piecePos + 1);
 						board[newPos[1]][newPos[0]] = 110 + piecePos + 1;
 					}
