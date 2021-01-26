@@ -65,5 +65,5 @@ class king : public piece
 		int validMovement (int newPos[2], int board[][8]);
 		void setData (bool inputCastling);
 		//CH01
-		int check(int board[][8]); // OK
+		int check(int board[][8], int checkPos[][2]); // OK
 };

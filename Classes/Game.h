@@ -27,8 +27,10 @@ class Game{
 	public:
 		Game();
 		bool printOld, printNew;
+		bool printCheck;
 		int oldPos[2], newPos[2];	
+		int checkPos[2][2];
 		int board[8][8];
-		void Event_Left(int x, int y);
+		void Event_Left(int x, int y, int sizeX, int sizeY);
 		void Event_Right();
 };
