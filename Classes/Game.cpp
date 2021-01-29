@@ -389,7 +389,13 @@ void Game::Event_Left(int x, int y){
 	}
 }
 
+void Game::operator --(){
+	printOld = false;
+	printNew = false;
+}
+/*
 void Game::Event_Right(){
 	printOld = false;
 	printNew = false;
 }
+*/

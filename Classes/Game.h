@@ -30,5 +30,6 @@ class Game{
 		int oldPos[2], newPos[2];	
 		int board[8][8];
 		void Event_Left(int x, int y);
-		void Event_Right();
+		void operator --();
+		//void Event_Right();
 };

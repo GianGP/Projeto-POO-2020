@@ -93,7 +93,7 @@ int main(){
 						
 					} else if(sf::Mouse::Right == event.mouseButton.button){ // botao direito
 						
-						Chess_Game.Event_Right();	 // Chama a rotina responsável pelos eventos do clique direito
+						--Chess_Game;	 // Chama a rotina responsável pelos eventos do clique direito
 					
 					}
 					break;
