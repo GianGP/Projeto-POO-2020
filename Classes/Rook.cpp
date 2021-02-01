@@ -45,7 +45,3 @@ int rook::validMovement(int newPos[2], int board[][8])
 		return 1;
 	}
 }
-
-void rook::setData(bool inputCastling){
-	castling = inputCastling;
-}

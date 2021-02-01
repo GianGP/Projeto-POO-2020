@@ -1,6 +1,6 @@
-// Case 1 = 235 235 208 (RGB)
-// Case 2 = 119 147 85 (RGB)
-// Case em destaque = 246 246 105 (RGB)
+// Casa 1 = 235 235 208 (RGB)
+// Casa 2 = 119 147 85 (RGB)
+// Casa em destaque = 246 246 105 (RGB)
 	
 #include "../Classes/Game.h"	
 #include <SFML/Graphics.hpp>
@@ -88,12 +88,12 @@ int main(){
 					if(sf::Mouse::Left == event.mouseButton.button){	//botao esquerdo
 					
 						sf::Vector2i localPosition = sf::Mouse::getPosition(window); // Pega a posição do mouse referente a janela
-						Chess_Game.Event_Left(localPosition.x, localPosition.y);   // Chama a rotina responsável pelos eventos do clique esquerdo
+						Chess_Game.Event_Left(localPosition.x, localPosition.y, int(window.getSize().x/8), int(window.getSize().y/8));   // Chama a rotina responsável pelos eventos do clique esquerdo
 						
 						
 					} else if(sf::Mouse::Right == event.mouseButton.button){ // botao direito
 						
-						Chess_Game.Event_Right();	 // Chama a rotina responsável pelos eventos do clique direito
+						--Chess_Game;	 // Chama a rotina responsável pelos eventos do clique direito
 					
 					}
 					break;
@@ -105,6 +105,7 @@ int main(){
 		// Desenha todas as informações na janela
 		for(int i=0;i<rows;i++){
 	        for(int j=0;j<columns;j++){
+	        	//Chess_Game.board[3][3] = 51;
 	            grid[i][j].setSize(cellSize);
 	            grid[i][j].setOutlineColor(sf::Color::Black);
 	            grid[i][j].setPosition(i*cellSize.x + 0.5f, j*cellSize.y + 0.5f);
@@ -117,6 +118,15 @@ int main(){
 				}
 	            
 				// Destaca as casas selecionadas para indicar o movimento	            
+				if(Chess_Game.printCheck){
+					if(i == Chess_Game.checkPos[0][0] && j == Chess_Game.checkPos[0][1]){
+						grid[Chess_Game.checkPos[0][0]][Chess_Game.checkPos[0][1]].setFillColor(sf::Color(231,53,54));	
+					}
+					if(i == Chess_Game.checkPos[1][0] && j == Chess_Game.checkPos[1][1]){
+						grid[Chess_Game.checkPos[1][0]][Chess_Game.checkPos[1][1]].setFillColor(sf::Color(231,53,54));	
+					}
+				}
+				
 				if(Chess_Game.printOld){
 					if(i == Chess_Game.oldPos[0] && j == Chess_Game.oldPos[1]){
 						grid[Chess_Game.oldPos[0]][Chess_Game.oldPos[1]].setFillColor(sf::Color(246,246,105));	

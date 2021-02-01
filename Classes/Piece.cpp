@@ -11,8 +11,8 @@ piece::piece(){
 piece::piece(bool color, int posX, int posY, int number)
 {
 	white = color;
-	position[1] = posX;
-	position[0] = posY;
+	position[0] = posX;
+	position[1] = posY;
 	ID = number;
 }
 
@@ -37,3 +37,8 @@ void piece::getPos(int tempPos[2]){ // OK
 	tempPos[1] = position[1];
 	return;
 }
+
+int piece::validMovement(int newPos[2], int board[][8]){
+	
+}
+

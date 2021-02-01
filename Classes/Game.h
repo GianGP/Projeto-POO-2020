@@ -4,13 +4,15 @@ class Game{
 	private:
 		//Define de qual cor é o próximo movimento (brancas - true, negras - false)
 		bool nextMove;	
+		int enPassantID;
+		int enPassant[2];
 		
 		//Peças brancas
-		pawn WP[8];
+		pawn WP[8]; 
 		rook WR[2];
 		knight WKN[2];
 		bishop WB[2];
-		queen WQ[9];
+		queen WQ[9]; 
 		king WKG;
 		
 		//Peças negras
@@ -21,14 +23,22 @@ class Game{
 		queen BQ[9];
 		king BKG;
 		
+		//Linha 0 -> Peões
+		//Linha 1 -> Restante das peças
+		piece *Wpieces[2][8]; 
+		piece *Bpieces[2][8];
+		
 		//Validacao do movimento
 		int movementValid();
 		
 	public:
 		Game();
 		bool printOld, printNew;
+		bool printCheck;
 		int oldPos[2], newPos[2];	
+		int checkPos[2][2];
 		int board[8][8];
-		void Event_Left(int x, int y);
-		void Event_Right();
+		void Event_Left(int x, int y, int sizeX, int sizeY);
+		void operator --();
+		
 };
