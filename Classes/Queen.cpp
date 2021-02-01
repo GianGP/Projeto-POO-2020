@@ -3,8 +3,7 @@ queen::queen():bishop(),rook(){
 }
 
 queen::queen(bool color, int posX, int posY, int number){
-		bishop::setData(color, posX, posY, number);
-//		rook::setData(color, posX, posY , number);
+		bishop::setData(color, posX, posY, number),	rook::setData(color, posX, posY , number);
 	}
 
 int queen::validMovement(int newPos[2], int board[][8])
